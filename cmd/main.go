@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log/slog"
 	"os"
 
 	"github.com/CactusBros/smaila/config"
@@ -9,22 +10,21 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var envPath = flag.String("env", ".env", "path to the environment variable file")
-
 func main() {
+	envPath := flag.String("env", "", "Path to .env file (optional)")
 	flag.Parse()
-	if v := os.Getenv("CONFIG_PATH"); len(v) != 0 {
-		*envPath = v
+
+	if *envPath == "" {
+		*envPath = os.Getenv("CONFIG_PATH")
 	}
-	cfg := MustInitConfig()
+
+	if *envPath != "" {
+		if err := godotenv.Load(*envPath); err != nil {
+			slog.Warn("Warning: failed to load .env file", "error", err)
+		}
+	}
+
+	cfg := config.MustReadConfigFromEnv()
 
 	handler.Run(cfg)
-}
-
-func MustInitConfig() config.Config {
-	err := godotenv.Load(*envPath)
-	if err != nil {
-		panic(err)
-	}
-	return config.MustReadConfigFromEnv()
 }
