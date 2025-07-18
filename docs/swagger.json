@@ -3,5 +3,87 @@
     "info": {
         "contact": {}
     },
-    "paths": {}
+    "paths": {
+        "/": {
+            "post": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mail"
+                ],
+                "summary": "Send an email",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recipient(s), comma separated",
+                        "name": "to",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "CC recipient(s), comma separated",
+                        "name": "cc",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "BCC recipient(s), comma separated",
+                        "name": "bcc",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email subject",
+                        "name": "subject",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email body",
+                        "name": "body",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Set to 'true' if body is HTML",
+                        "name": "is_html",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Attachments (can upload multiple)",
+                        "name": "attachments",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

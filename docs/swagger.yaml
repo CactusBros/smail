@@ -1,4 +1,58 @@
 info:
   contact: {}
-paths: {}
+paths:
+  /:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Recipient(s), comma separated
+        in: formData
+        name: to
+        required: true
+        type: string
+      - description: CC recipient(s), comma separated
+        in: formData
+        name: cc
+        type: string
+      - description: BCC recipient(s), comma separated
+        in: formData
+        name: bcc
+        type: string
+      - description: Email subject
+        in: formData
+        name: subject
+        required: true
+        type: string
+      - description: Email body
+        in: formData
+        name: body
+        required: true
+        type: string
+      - description: Set to 'true' if body is HTML
+        in: formData
+        name: is_html
+        type: string
+      - description: Attachments (can upload multiple)
+        in: formData
+        name: attachments
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Send an email
+      tags:
+      - mail
 swagger: "2.0"
