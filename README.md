@@ -1,1 +1,1 @@
-# smail-api
+# smaila is simple mail api
