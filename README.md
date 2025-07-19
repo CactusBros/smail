@@ -26,9 +26,17 @@ SMTP_USERNAME=example@gmail.com
 SMTP_PASSWORD=aaaabbbbccccdddd
 ```
 
-2.  Build the Docker image:
+2.  Pull the Docker image:
 
 ```bash
+docker pull ghcr.io/cactusbros/smaila:latest # or specific version like v0.2.2
+```
+
+Or manually Build the image:
+
+```bash
+git clone https://github.com/CactusBros/smaila.git
+cd smaila
 docker build -t smaila .
 ```
 
