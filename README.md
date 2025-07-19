@@ -43,8 +43,19 @@ docker build -t smaila .
 3. Run the container:
 
 ```bash
+docker run -p 8080:8080 --env-file .env ghcr.io/cactusbros/smaila:latest # or specific version like v0.2.2
+```
+
+Or using the manually built image:
+
+```bash
 docker run -p 8080:8080 --env-file .env smaila
 ```
+
+> 💡 **Note**: If your `.env` file is not in the current directory, provide the full path to it using the `--env-file` flag, like:
+> ```bash
+> docker run -p 8080:8080 --env-file /path/to/.env smaila
+> ```
 
 ## 📘 API Documentation
 
