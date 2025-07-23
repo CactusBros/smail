@@ -6,13 +6,13 @@ import (
 )
 
 type Message struct {
-	To          []string     // primary recipients
-	Cc          []string     // carbon copy
-	Bcc         []string     // blind carbon copy
-	Subject     string       // email subject
-	Body        string       // main message body (usually plain text or HTML)
-	IsHTML      bool         // true if Body is HTML
-	Attachments []Attachment // optional file attachments
+	To          []string // primary recipients
+	Cc          []string // carbon copy
+	Bcc         []string // blind carbon copy
+	Subject     string   // email subject
+	Body        string   // main message body (usually plain text or HTML)
+	IsHTML      bool     // true if Body is HTML
+	Attachments []string // optional path to file attachments
 }
 
 type Attachment struct {
@@ -42,8 +42,8 @@ func Send(cfg config.SMTPConfig, msg Message) error {
 	}
 
 	// Attach files
-	for _, a := range msg.Attachments {
-		m.Attach(a.Filename)
+	for _, att := range msg.Attachments {
+		m.Attach(att)
 	}
 
 	// Send email

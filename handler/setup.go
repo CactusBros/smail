@@ -3,14 +3,24 @@ package handler
 import (
 	"fmt"
 	"io"
+	"log/slog"
+	"mime/multipart"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/CactusBros/smaila/config"
+	_ "github.com/CactusBros/smaila/docs"
 	"github.com/CactusBros/smaila/internal/mail"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
-	_ "github.com/CactusBros/smaila/docs"
+)
+
+const (
+	KiB = 1024 << (iota * 10)
+	MiB
+	GiB
 )
 
 // Run initial routes and serve HTTP requests.
@@ -61,26 +71,18 @@ func newMailHandler(cfg config.SMTPConfig) fiber.Handler {
 			return fiber.NewError(fiber.StatusBadRequest, "Invalid multipart form")
 		}
 
-		var attachments []mail.Attachment
+		var attachments []string
 		if form != nil {
 			files := form.File["attachments"]
 			for _, fileHeader := range files {
-				file, err := fileHeader.Open()
-				if err != nil {
-					return fiber.NewError(fiber.StatusInternalServerError, "Failed to open attachment")
+				if fileHeader.Size > 25*MiB {
+					return fiber.NewError(fiber.StatusBadRequest, "attachment must be less than 25MiB")
 				}
-				defer file.Close()
-
-				content, err := io.ReadAll(file)
+				filePath, err := SaveFileTemp(fileHeader)
 				if err != nil {
-					return fiber.NewError(fiber.StatusInternalServerError, "Failed to read attachment")
+					return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 				}
-
-				attachments = append(attachments, mail.Attachment{
-					Filename:    fileHeader.Filename,
-					ContentType: fileHeader.Header.Get("Content-Type"),
-					Content:     content,
-				})
+				attachments = append(attachments, filePath)
 			}
 		}
 
@@ -100,6 +102,13 @@ func newMailHandler(cfg config.SMTPConfig) fiber.Handler {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
 
+		// Clean temp files
+		for _, file := range attachments {
+			if err = os.RemoveAll(filepath.Dir(file)); err != nil {
+				slog.Error("failed to remove temp file", "file path", file, "error", err)
+			}
+		}
+
 		return c.SendStatus(fiber.StatusOK)
 	}
 }
@@ -113,4 +122,28 @@ func filterEmpty(input []string) []string {
 		}
 	}
 	return result
+}
+
+func SaveFileTemp(header *multipart.FileHeader) (path string, err error) {
+	file, err := header.Open()
+	if err != nil {
+		return "", fmt.Errorf("failed to open attachment: %v", header.Filename)
+	}
+	defer file.Close()
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		return "", fmt.Errorf("failed to read attachment: %v", header.Filename)
+	}
+
+	dir, err := os.MkdirTemp(os.TempDir(), "*")
+	if err != nil {
+		return "", fmt.Errorf("failed to make temp dir")
+	}
+
+	path = filepath.Join(dir, header.Filename)
+	if err = os.WriteFile(path, data, 0644); err != nil {
+		return "", fmt.Errorf("failed to save attachment: %v", header.Filename)
+	}
+	return
 }

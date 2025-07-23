@@ -15,17 +15,9 @@ FROM alpine:3 AS stage
 
 RUN apk update && apk add --no-cache ca-certificates
 
-# Create non-root user
-# RUN adduser -D -g '' appuser
-
 WORKDIR /app
 
 COPY --from=builder /smaila ./
-
-# Optional: Copy static files, configs, etc. (but not .env)
-# COPY static/ ./static/
-
-# USER appuser
 
 EXPOSE 8080
 
