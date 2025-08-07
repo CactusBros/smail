@@ -10,8 +10,6 @@ Smaila is a lightweight HTTP API for sending emails using an SMTP server. It sup
 - Swagger (OpenAPI) documentation
 - Dockerized for easy deployment
 
-> ⚠️ Attachment support is currently limited – sending attachments is not functional at the moment.
-
 ## ⚙️ Setup
 
 1. Create a .env file:
@@ -76,7 +74,6 @@ curl -X POST http://localhost:8080/ \
 
 ## 📝 Todo
 
-- Support for sending attachments
 - Add email open tracking
 - Logging improvements
 - Authentication or API key protection
