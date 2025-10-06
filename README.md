@@ -1,4 +1,4 @@
-## 📬 Smaila – Simple Mail API
+## 📬 Smail – Simple Mail API
 
 Smaila is a lightweight HTTP API for sending emails using an SMTP server. It supports HTML bodies, CC/BCC, and is ready to use with Docker. Swagger documentation is included out of the box.
 
