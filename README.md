@@ -1,6 +1,6 @@
 ## 📬 Smail – Simple Mail API
 
-Smaila is a lightweight HTTP API for sending emails using an SMTP server. It supports HTML bodies, CC/BCC, and is ready to use with Docker. Swagger documentation is included out of the box.
+Smail is a lightweight HTTP API for sending emails using an SMTP server. It supports HTML bodies, CC/BCC, and is ready to use with Docker. Swagger documentation is included out of the box.
 
 ## 🚀 Features
 
@@ -27,32 +27,32 @@ SMTP_PASSWORD=aaaabbbbccccdddd
 2.  Pull the Docker image:
 
 ```bash
-docker pull ghcr.io/cactusbros/smaila:latest # or specific version like v0.2.2
+docker pull ghcr.io/cactusbros/smail:latest # or specific version like v0.2.2
 ```
 
 Or manually Build the image:
 
 ```bash
-git clone https://github.com/CactusBros/smaila.git
-cd smaila
-docker build -t smaila .
+git clone https://github.com/CactusBros/smail.git
+cd smail
+docker build -t smail .
 ```
 
 3. Run the container:
 
 ```bash
-docker run -p 8080:8080 --env-file .env ghcr.io/cactusbros/smaila:latest # or specific version like v0.2.2
+docker run -p 8080:8080 --env-file .env ghcr.io/cactusbros/smail:latest # or specific version like v0.2.2
 ```
 
 Or using the manually built image:
 
 ```bash
-docker run -p 8080:8080 --env-file .env smaila
+docker run -p 8080:8080 --env-file .env smail
 ```
 
 > 💡 **Note**: If your `.env` file is not in the current directory, provide the full path to it using the `--env-file` flag, like:
 > ```bash
-> docker run -p 8080:8080 --env-file /path/to/.env smaila
+> docker run -p 8080:8080 --env-file /path/to/.env smail
 > ```
 
 ## 📘 API Documentation
